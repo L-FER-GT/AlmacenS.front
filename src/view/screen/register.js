@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import {
   Button,
   Box,
-  Container,
   Grid,
   TextField,
   Typography,
@@ -105,7 +104,7 @@ const RegisterUser = ({ onChangeScreen, users }) => {
   const enviarRegistro = () => {
     setRegisterNewUser({
       sendData: form,
-      onCallData: (data) => {
+      onCallBackData: (data) => {
         setForm({
           DocumentoIdentidad: "",
           Nombres: "",

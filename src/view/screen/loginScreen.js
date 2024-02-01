@@ -1,30 +1,30 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import {
   Button,
   Box,
-  Container,
   Grid,
   TextField,
-  Typography,
   Checkbox,
 } from "@mui/material";
 import Link from "@mui/material/Link";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Paper from "@mui/material/Paper";
 
-import axios from "axios";
 import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import LoginImage from "../../assets/signup.jpg";
 
-function Login({ onChangeScreen }) {
+//Queries
+import { getValidateUser } from "../../conexion/ConsultasUsers";
+
+function Login({ onChangeScreen, users }) {
   const [form, setForm] = useState({
     User: "lucyFer",
     Password: "12345678",
   });
-  const [formErrors, setFormErros] = useState({
+  const [formErrors, setFormErrors] = useState({
     User: "",
     Password: "",
   });
@@ -35,8 +35,26 @@ function Login({ onChangeScreen }) {
       ...form,
       [e.target.name]: e.target.value,
     });
-    setFormErros({ ...formErrors, [e.target.name]: "" });
+    setFormErrors({ ...formErrors, [e.target.name]: "" });
   };
+  console.log(users);
+  function loginUser() {
+    if (users.includes(form.User)) {
+      getValidateUser({
+        sendData: form,
+        onCallBackData: (response) => {
+          if(response.isCorrect){
+            onChangeScreen('Home');
+          }else{
+            setFormErrors({ ...formErrors, Password: "Ususario o contraseña incorrecta" });
+          }
+        },
+        onError: (err)=>{},
+      });
+    } else {
+      setFormErrors({ ...formErrors, User: "usuario Inexxistente" });
+    }
+  }
   return (
     <Grid container style={{ height: "100%", width: "100%" }}>
       <Grid item xs={6} style={{ height: "100%", width: "100%" }}>
@@ -58,11 +76,11 @@ function Login({ onChangeScreen }) {
           container
           item
           xs={8}
-          justifyContent={'center'}
+          justifyContent={"center"}
           alignContent={"center"}
           style={{ width: "100%" }}
         >
-          <Paper elevation={0} style={{width:'80%'}}>
+          <Paper elevation={0} style={{ width: "80%" }}>
             <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
               Accede a tu Cuenta
             </h2>
@@ -147,9 +165,9 @@ function Login({ onChangeScreen }) {
                 fullWidth
                 color="primary"
                 variant="contained"
-                onClick={() => {}} //registerUser
+                onClick={loginUser} //registerUser
               >
-                Registrar
+                Iniciar Sesion
               </Button>
             </Grid>
             <div>

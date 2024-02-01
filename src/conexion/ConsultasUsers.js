@@ -1,11 +1,15 @@
-import { enlace } from "./Contastes";
+import { enlace } from "./Enlace";
 import { getConsult } from "./GenerateConeccion";
-import { setConsult } from "./GenerateConeccion";
+import { postConsult } from "./GenerateConeccion";
 
-export const getUsers = ({ onCallData, onError }) => {
-    getConsult(`${enlace}/listUsuarios`, { onCallData, onError })
+export const getUsers = ({ onCallBackData=()=>{}, onError=()=>{}}) => {
+    getConsult(`${enlace}/listUsuarios`, { onCallBackData, onError })
 };
 
-export const setRegisterNewUser = ({ onCallData, onError, sendData}) => {
-    setConsult(`${enlace}/newUser`, { onCallData, onError, sendData})
+export const setRegisterNewUser = ({ onCallBackData=()=>{}, onError=()=>{}, sendData=''}) => {
+    postConsult(`${enlace}/newUser`, { onCallBackData, onError, sendData})
+};
+
+export const getValidateUser = ({ onCallBackData=()=>{}, onError=()=>{}, sendData=''}) => {
+    postConsult(`${enlace}/validateUser`, { onCallBackData, onError, sendData})
 };
