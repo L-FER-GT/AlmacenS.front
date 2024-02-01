@@ -20,16 +20,16 @@ import LoginImage from "../../assets/Login.png";
 //querys
 import { setRegisterNewUser } from "../../conexion/ConsultasUsers";
 
-const RegisterUser = ({ onChangeScreen, users }) => {
+const RegisterUser = ({ onChangeScreen, users, onRefleshUser }) => {
   const [form, setForm] = useState({
-    DocumentoIdentidad: "73530724",
-    Nombres: "Fernando",
-    Apellidos: "Gutierrez",
-    Cargo: "Ninguno",
-    Contacto: "936666801",
-    User: "lucyFer",
-    Password: "12345678",
-    VerifPass: "12345678",
+    DocumentoIdentidad: "",
+    Nombres: "",
+    Apellidos: "",
+    Cargo: "",
+    Contacto: "",
+    User: "",
+    Password: "",
+    VerifPass: "",
   });
   const [formErrors, setFormErros] = useState({
     DocumentoIdentidad: "",
@@ -105,6 +105,8 @@ const RegisterUser = ({ onChangeScreen, users }) => {
     setRegisterNewUser({
       sendData: form,
       onCallBackData: (data) => {
+        onRefleshUser();
+        onChangeScreen("Home");
         setForm({
           DocumentoIdentidad: "",
           Nombres: "",

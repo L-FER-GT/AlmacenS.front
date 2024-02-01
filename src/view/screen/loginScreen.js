@@ -15,14 +15,15 @@ import InputAdornment from "@mui/material/InputAdornment";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import LoginImage from "../../assets/signup.jpg";
-
+//Dialogs
+import DialogRecuperarPassWord from "../dialogs/dilogAuxPassword";
 //Queries
 import { getValidateUser } from "../../conexion/ConsultasUsers";
 
 function Login({ onChangeScreen, users }) {
   const [form, setForm] = useState({
-    User: "lucyFer",
-    Password: "12345678",
+    User: "",
+    Password: "",
   });
   const [formErrors, setFormErrors] = useState({
     User: "",
@@ -55,8 +56,11 @@ function Login({ onChangeScreen, users }) {
       setFormErrors({ ...formErrors, User: "usuario Inexxistente" });
     }
   }
+  //controll dialog recuperar password
+  const [openDialog, setOpenDialog]=useState(false)
   return (
     <Grid container style={{ height: "100%", width: "100%" }}>
+      <DialogRecuperarPassWord open={openDialog} onHandleClose={()=>{setOpenDialog(false)}}/>
       <Grid item xs={6} style={{ height: "100%", width: "100%" }}>
         <Box
           component="img"
@@ -146,7 +150,7 @@ function Login({ onChangeScreen, users }) {
                   variant="body2"
                   color="primary"
                   onClick={() => {
-                    //onChangeScreen("NewUser");
+                    setOpenDialog(true);
                   }}
                   underline="none" // Elimina el subrayado
                   sx={{
