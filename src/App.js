@@ -1,55 +1,39 @@
 import React, {useEffect, useState} from 'react';
 import Home from './view/screen/home'; // Ajusta la ruta según la ubicación de tu componente Home
 import Login from './view/screen/loginScreen';
+import RegisterUser from './view/screen/register';
+import { Container } from '@mui/material';
 import axios from 'axios';
 import './App.css';
 
-// import bcrypt from 'bcrypt'
-// const bcrypt = require('bcrypt');
-
 function App() {
-  const [screenSelect, setScreenSelect]=useState('Home');
-  const [trabajadores, setTrabajadores] = useState([])
+  const [screenSelect, setScreenSelect]=useState('NewUser');
+  const [usuarios, setUsuarios] = useState([])
 
-  useEffect(() => {
-    obtenerTrabajadores();
-  }, []);
-  useEffect(()=>{console.log(trabajadores)},[trabajadores]);
+  // useEffect(() => {
+  //   obtenerUsuarios();
+  // }, []);
 
-  const obtenerTrabajadores = () => {
-    axios.get('http://localhost:5000/trabajadores')
-      .then((response) => {
-        setTrabajadores(response.data);
-        let auxValue=response.data[0];
-        // DetectarPasswords('12345',auxValue[Contrasena]);
-      })
-      .catch((error) => {
-        console.error('Error al obtener datos desde el servidor: ', error);
-      });
-  };
+  // useEffect(()=>{console.log(usuarios)},[usuarios]);
 
-  // const DetectarPasswords=(passwordFromUser,hashedPasswordFromDatabase)=>{
-  //   bcrypt.compare(passwordFromUser, hashedPasswordFromDatabase, (err, result) => {
-  //     if (err) {
-  //       console.error("Error al comparar contraseñas: ", err);
-  //       // Manejar el error
-  //     } else {
-  //       if (result) {
-  //         console.log("La contraseña es válida");
-  //         // Permitir el acceso
-  //       } else {
-  //         console.log("La contraseña no es válida");
-  //         // Denegar el acceso
-  //       }
-  //     }
-  //   });
-  // }
+  // const obtenerUsuarios = () => {
+  //   axios.get('http://localhost:5000/listUsuarios')
+  //     .then((response) => {
+  //       setUsuarios(response.data);
+  //     })
+  //     .catch((error) => {
+  //       console.error('Error al obtener datos desde el servidor: ', error);
+  //     });
+  // };
+
+  
 
   return (
     <div className="App">
       {/* Contenido del componente Home */}
       {screenSelect=='Home' && <Home onHandleClick={setScreenSelect}/>}
       {screenSelect=='Login' && <Login />}
+      {screenSelect=='NewUser' && <RegisterUser onChangeScreen={setScreenSelect}/>}
     </div>
   );
 }
