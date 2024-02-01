@@ -30,7 +30,7 @@ function App() {
   return (
     <div className="App">
       {/* Contenido del componente Home */}
-      {screenSelect === "Home" && <Home onHandleClick={setScreenSelect} onRefleshUser={obtenerUsuarios}/>}
+      {screenSelect === "Home" && <Home onChangeScreen={setScreenSelect} onRefleshUser={obtenerUsuarios}/>}
       {screenSelect === "Login" && (
         <Login users={usuarios} onChangeScreen={setScreenSelect} />
       )}

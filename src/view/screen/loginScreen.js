@@ -38,7 +38,6 @@ function Login({ onChangeScreen, users }) {
     });
     setFormErrors({ ...formErrors, [e.target.name]: "" });
   };
-  console.log(users);
   function loginUser() {
     if (users.includes(form.User)) {
       getValidateUser({
