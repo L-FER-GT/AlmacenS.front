@@ -12,6 +12,7 @@ import Link from "@mui/material/Link";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Paper from "@mui/material/Paper";
 
+import axios from 'axios';
 import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
 import VisibilityIcon from "@mui/icons-material/Visibility";
@@ -49,9 +50,17 @@ const RegisterUser = ({onChangeScreen}) => {
   };
 
   const registerUser = (e) => {
-    // Handle registration logic
-    e.preventDefault();
-    console.log("Registering user:", form);
+    obtenerUsuarios()
+  };
+
+  const obtenerUsuarios = () => {
+    axios.get('http://localhost:5000/listUsuarios')
+      .then((response) => {
+        console.log(response.data)
+      })
+      .catch((error) => {
+        console.error('Error al obtener datos desde el servidor: ', error);
+      });
   };
 
   return (
@@ -227,8 +236,8 @@ const RegisterUser = ({onChangeScreen}) => {
                 label="Acepto los términos y condiciones"
               />
             </Grid>
-            <Grid itmen container xs={12} justifyContent={"center"}>
-              <Button fullWidth color="primary" variant="contained">
+            <Grid item container xs={12} justifyContent={"center"}>
+              <Button fullWidth color="primary" variant="contained" onClick={registerUser}>
                 Registrar
               </Button>
             </Grid>
