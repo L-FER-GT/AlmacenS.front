@@ -7,7 +7,7 @@ import axios from 'axios';
 import './App.css';
 
 function App() {
-  const [screenSelect, setScreenSelect]=useState('NewUser');
+  const [screenSelect, setScreenSelect]=useState('Login');
   const [usuarios, setUsuarios] = useState([])
 
   const obtenerUsuarios = () => {
@@ -33,7 +33,7 @@ function App() {
     <div className="App">
       {/* Contenido del componente Home */}
       {screenSelect=='Home' && <Home onHandleClick={setScreenSelect}/>}
-      {screenSelect=='Login' && <Login users={usuarios}/>}
+      {screenSelect=='Login' && <Login users={usuarios} onChangeScreen={setScreenSelect}/>}
       {screenSelect=='NewUser' && <RegisterUser onChangeScreen={setScreenSelect} users={usuarios}/>}
     </div>
   );

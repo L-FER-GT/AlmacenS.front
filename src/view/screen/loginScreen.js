@@ -1,105 +1,182 @@
 import React, { useContext, useState } from "react";
 import {
   Button,
-  Checkbox,
-  FormControlLabel,
+  Box,
+  Container,
+  Grid,
   TextField,
   Typography,
+  Checkbox,
 } from "@mui/material";
+import Link from "@mui/material/Link";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Paper from "@mui/material/Paper";
 
-function Login() {
+import axios from "axios";
+import IconButton from "@mui/material/IconButton";
+import InputAdornment from "@mui/material/InputAdornment";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import LoginImage from "../../assets/signup.jpg";
+
+function Login({ onChangeScreen }) {
   const [form, setForm] = useState({
-    user: "",
-    password: "",
+    User: "lucyFer",
+    Password: "12345678",
+  });
+  const [formErrors, setFormErros] = useState({
+    User: "",
+    Password: "",
   });
 
-
+  const [showPassword, setShowPassword] = useState(false);
+  const handleInputChange = (e) => {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value,
+    });
+    setFormErros({ ...formErrors, [e.target.name]: "" });
+  };
   return (
-    <>
-      <div className="grid grid-cols-1 sm:grid-cols-2 h-screen items-center place-items-center">
-        <div className="flex justify-center">
-          <img src={require("../../assets/signup.jpg")} alt="" />
-        </div>
-        <div className="w-full max-w-md space-y-8 p-10 rounded-lg">
-          <div>
-            <Typography variant="h4" align="center" gutterBottom>
-              Accede a tu cuenta
-            </Typography>
-          </div>
-          <form className="mt-8 space-y-6" onSubmit={()=>{}}>
-            <div className="-space-y-px rounded-md shadow-sm">
-              <div>
-                <TextField
-                  id="user"
-                  name="usuario"
-                  type="text"
-                  autoComplete="text"
-                  required
-                  fullWidth
-                  label="Ingrese Usuario"
-                  variant="outlined"
-                  value={form.user}
-                  onChange={()=>{}}
-                />
-              </div>
-              <div>
-                <TextField
-                  id="password"
-                  name="password"
-                  type="password"
-                  autoComplete="current-password"
-                  required
-                  fullWidth
-                  label="Ingrese Contraseña"
-                  variant="outlined"
-                  value={form.password}
-                  onChange={()=>{}}
-                />
-              </div>
-            </div>
-
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
+    <Grid container style={{ height: "100%", width: "100%" }}>
+      <Grid item xs={6} style={{ height: "100%", width: "100%" }}>
+        <Box
+          component="img"
+          src={LoginImage}
+          alt="Login"
+          style={{ width: "100%", height: "100%", objectFit: "cover" }}
+        />
+      </Grid>
+      <Grid
+        container
+        item
+        xs={6}
+        style={{ height: "700px", width: "100%" }}
+        justifyContent={"center"}
+      >
+        <Grid
+          container
+          item
+          xs={8}
+          justifyContent={'center'}
+          alignContent={"center"}
+          style={{ width: "100%" }}
+        >
+          <Paper elevation={0} style={{width:'80%'}}>
+            <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
+              Accede a tu Cuenta
+            </h2>
+            <Grid item xs={12}>
+              <TextField
+                variant="outlined"
+                margin="dense"
+                size="small"
+                fullWidth
+                label="Usuario"
+                name="User"
+                value={form.User}
+                error={formErrors.User !== ""}
+                helperText={formErrors.User}
+                onChange={handleInputChange}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                label="Contraseña"
+                type={showPassword ? "text" : "password"}
+                variant="outlined"
+                margin="dense"
+                size="small"
+                fullWidth
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        edge="end"
+                        onClick={() => {
+                          setShowPassword(!showPassword);
+                        }}
+                        aria-label="toggle password visibility"
+                      >
+                        {showPassword ? (
+                          <VisibilityIcon />
+                        ) : (
+                          <VisibilityOffIcon />
+                        )}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+                name="Password"
+                value={form.Password}
+                error={formErrors.Password !== ""}
+                helperText={formErrors.Password}
+                onChange={handleInputChange}
+              />
+            </Grid>
+            <Grid item xs={12} style={{ height: "20px" }} />
+            <Grid container>
+              <Grid container item xs={6} justifyContent={"flex-start"}>
                 <FormControlLabel
-                  control={
-                    <Checkbox
-                      id="remember-me"
-                      name="remember-me"
-                      color="primary"
-                    />
-                  }
+                  control={<Checkbox onChange={() => {}} />}
                   label="Recordarme"
                 />
-              </div>
-
-              <div className="text-sm">
-                <span className="font-medium text-indigo-600 hover:text-indigo-500">
+              </Grid>
+              <Grid item container xs={6} justifyContent={"flex-end"}>
+                <Link
+                  component="button"
+                  variant="body2"
+                  color="primary"
+                  onClick={() => {
+                    //onChangeScreen("NewUser");
+                  }}
+                  underline="none" // Elimina el subrayado
+                  sx={{
+                    fontWeight: "normal", // Inicialmente establecido en normal
+                    "&:hover": {
+                      fontWeight: "bold", // Se pone en negrita al pasar el mouse sobre el enlace
+                    },
+                  }}
+                >
                   ¿Olvidaste tu contraseña?
-                </span>
-              </div>
-            </div>
-
-            <div>
+                </Link>
+              </Grid>
+            </Grid>
+            <Grid item container xs={12} justifyContent={"center"}>
               <Button
-                type="submit"
-                variant="contained"
-                color="primary"
                 fullWidth
-                onClick={()=>{}}
+                color="primary"
+                variant="contained"
+                onClick={() => {}} //registerUser
               >
-                Acceder
+                Registrar
               </Button>
-              <Typography variant="body2" align="center" className="mt-2">
-                O no tiene una cuenta,{" "}
-                <span className="font-medium text-indigo-600 hover:text-indigo-500">
-                  {" "}
-                </span>
-              </Typography>
+            </Grid>
+            <div>
+              Si no tienes una cuenta,{" "}
+              <Link
+                component="button"
+                variant="body2"
+                color="primary"
+                onClick={() => {
+                  onChangeScreen("NewUser");
+                }}
+                underline="none" // Elimina el subrayado
+                sx={{
+                  fontWeight: "normal", // Inicialmente establecido en normal
+                  "&:hover": {
+                    fontWeight: "bold", // Se pone en negrita al pasar el mouse sobre el enlace
+                  },
+                }}
+              >
+                Registrece Aqui
+              </Link>
+              .
             </div>
-          </form>
-        </div>
-      </div>
-    </>
+          </Paper>
+        </Grid>
+      </Grid>
+    </Grid>
   );
 }
 
