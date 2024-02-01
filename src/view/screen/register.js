@@ -12,7 +12,7 @@ import Link from "@mui/material/Link";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Paper from "@mui/material/Paper";
 
-import axios from 'axios';
+import axios from "axios";
 import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
 import VisibilityIcon from "@mui/icons-material/Visibility";
@@ -20,8 +20,18 @@ import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
 import LoginImage from "../../assets/Login.png";
 
-const RegisterUser = ({onChangeScreen}) => {
+const RegisterUser = ({ onChangeScreen, users }) => {
   const [form, setForm] = useState({
+    DocumentoIdentidad: "73530724",
+    Nombres: "Fernando",
+    Apellidos: "Gutierrez",
+    Cargo: "Ninguno",
+    Contacto: "936666801",
+    User: "lucyFer",
+    Password: "12345678",
+    VerifPass: "12345678",
+  });
+  const [formErrors, setFormErros] = useState({
     DocumentoIdentidad: "",
     Nombres: "",
     Apellidos: "",
@@ -35,11 +45,13 @@ const RegisterUser = ({onChangeScreen}) => {
   const [showPassword, setShowPassword] = useState(false);
   const [showPasswordVerif, setShowPasswordVerif] = useState(false);
   const [checkTerminos, setCheckTerminos] = useState(false);
+  const [errorTerminos, setErrorTerminos] = useState(false)
   const handleInputChange = (e) => {
     setForm({
       ...form,
       [e.target.name]: e.target.value,
     });
+    setFormErros({ ...formErrors, [e.target.name]: "" });
   };
 
   const handleCheckboxChange = (e) => {
@@ -48,18 +60,70 @@ const RegisterUser = ({onChangeScreen}) => {
       [e.target.name]: e.target.checked,
     });
   };
-
-  const registerUser = (e) => {
-    obtenerUsuarios()
+  const registerNewUser = (e) => {
+    let errors = {};
+    let flagDataValida = true;
+    if (form.Nombres === "") {
+      errors.Nombres = "Este campo no puede estar Vacio";
+      flagDataValida = false;
+    }
+    if (form.Apellidos === "") {
+      errors.Apellidos = "Este campo no puede estar Vacio";
+      flagDataValida = false;
+    }
+    if (form.DocumentoIdentidad === "") {
+      errors.DocumentoIdentidad = "Este campo no puede estar Vacio";
+      flagDataValida = false;
+    }
+    if (form.User === "") {
+      errors.User = "Este campo no puede estar Vacio";
+      flagDataValida = false;
+    }
+    if (form.Password !== form.VerifPass) {
+      errors.Password = "Las contraseñas no coinciden";
+      errors.VerifPass = "Las contraseñas no coinciden";
+      flagDataValida = false;
+    }
+    if (form.Password === "") {
+      errors.Password = "Este campo no puede estar Vacio";
+      flagDataValida = false;
+    }
+    if (form.VerifPass === "") {
+      errors.VerifPass = "Este campo no puede estar Vacio";
+      flagDataValida = false;
+    }
+    if(!checkTerminos){
+      setErrorTerminos(true)
+      flagDataValida = false;
+    }
+    if(users.includes(form.User)){
+      errors.User = "Usuario Existente, pruebe con otro";
+      flagDataValida = false;
+    }
+    if (flagDataValida) {
+      enviarRegistro();
+    } else {
+      setFormErros({ ...formErrors, ...errors });
+    }
   };
 
-  const obtenerUsuarios = () => {
-    axios.get('http://localhost:5000/listUsuarios')
-      .then((response) => {
-        console.log(response.data)
+  const enviarRegistro = () => {
+    axios
+      .post("http://localhost:5000/newUser", form)
+      .then(() => {
+        setForm({
+          DocumentoIdentidad: "",
+          Nombres: "",
+          Apellidos: "",
+          Cargo: "",
+          Contacto: "",
+          User: "",
+          Password: "",
+          VerifPass: "",
+        });
       })
       .catch((error) => {
-        console.error('Error al obtener datos desde el servidor: ', error);
+        console.error("Error al agregar Cuenta ", error);
       });
   };
 
@@ -94,6 +158,8 @@ const RegisterUser = ({onChangeScreen}) => {
                   label="Nombres"
                   name="Nombres"
                   value={form.Nombres}
+                  error={formErrors.Nombres !== ""}
+                  helperText={formErrors.Nombres}
                   onChange={handleInputChange}
                 />
               </Grid>
@@ -106,6 +172,8 @@ const RegisterUser = ({onChangeScreen}) => {
                   label="Apellidos"
                   name="Apellidos"
                   value={form.Apellidos}
+                  error={formErrors.Apellidos !== ""}
+                  helperText={formErrors.Apellidos}
                   onChange={handleInputChange}
                 />
               </Grid>
@@ -119,6 +187,8 @@ const RegisterUser = ({onChangeScreen}) => {
                 label="Documento de Identidad"
                 name="DocumentoIdentidad"
                 value={form.DocumentoIdentidad}
+                error={formErrors.DocumentoIdentidad !== ""}
+                helperText={formErrors.DocumentoIdentidad}
                 onChange={handleInputChange}
               />
             </Grid>
@@ -140,21 +210,11 @@ const RegisterUser = ({onChangeScreen}) => {
                 margin="dense"
                 size="small"
                 fullWidth
-                label="Cargo en la empresa"
-                name="Cargo"
-                value={form.Cargo}
-                onChange={handleInputChange}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                margin="dense"
-                size="small"
-                fullWidth
                 label="Usuario"
                 name="User"
                 value={form.User}
+                error={formErrors.User !== ""}
+                helperText={formErrors.User}
                 onChange={handleInputChange}
               />
             </Grid>
@@ -187,6 +247,8 @@ const RegisterUser = ({onChangeScreen}) => {
                 }}
                 name="Password"
                 value={form.Password}
+                error={formErrors.Password !== ""}
+                helperText={formErrors.Password}
                 onChange={handleInputChange}
               />
             </Grid>
@@ -218,6 +280,8 @@ const RegisterUser = ({onChangeScreen}) => {
                   ),
                 }}
                 name="VerifPass"
+                error={formErrors.VerifPass !== ""}
+                helperText={formErrors.VerifPass}
                 value={form.VerifPass}
                 onChange={handleInputChange}
               />
@@ -230,14 +294,25 @@ const RegisterUser = ({onChangeScreen}) => {
                     checked={checkTerminos}
                     onChange={() => {
                       setCheckTerminos(!checkTerminos);
+                      setErrorTerminos(false);
                     }}
                   />
                 }
                 label="Acepto los términos y condiciones"
               />
+              {errorTerminos ?  (
+                <Typography variant="body2" color="error">
+                  Por favor, acepta los términos y condiciones.
+                </Typography>
+              ):null}
             </Grid>
             <Grid item container xs={12} justifyContent={"center"}>
-              <Button fullWidth color="primary" variant="contained" onClick={registerUser}>
+              <Button
+                fullWidth
+                color="primary"
+                variant="contained"
+                onClick={registerNewUser} //registerUser
+              >
                 Registrar
               </Button>
             </Grid>
@@ -247,7 +322,9 @@ const RegisterUser = ({onChangeScreen}) => {
                 component="button"
                 variant="body2"
                 color="primary"
-                onClick={() => {onChangeScreen('Login')}}
+                onClick={() => {
+                  onChangeScreen("Login");
+                }}
                 underline="none" // Elimina el subrayado
                 sx={{
                   fontWeight: "normal", // Inicialmente establecido en normal

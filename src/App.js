@@ -10,21 +10,22 @@ function App() {
   const [screenSelect, setScreenSelect]=useState('NewUser');
   const [usuarios, setUsuarios] = useState([])
 
-  // useEffect(() => {
-  //   obtenerUsuarios();
-  // }, []);
+  const obtenerUsuarios = () => {
+    axios
+      .get("http://localhost:5000/listUsuarios")
+      .then((response) => {
+        const allUsers=response.data
+        const userArray = allUsers.map(item => item.Usuario);
+        setUsuarios(userArray)
+      })
+      .catch((error) => {
+        console.error("Error al obtener datos desde el servidor: ", error);
+      });
+  };
+  useEffect(() => {
+    obtenerUsuarios();
+  }, []);
 
-  // useEffect(()=>{console.log(usuarios)},[usuarios]);
-
-  // const obtenerUsuarios = () => {
-  //   axios.get('http://localhost:5000/listUsuarios')
-  //     .then((response) => {
-  //       setUsuarios(response.data);
-  //     })
-  //     .catch((error) => {
-  //       console.error('Error al obtener datos desde el servidor: ', error);
-  //     });
-  // };
 
   
 
@@ -32,8 +33,8 @@ function App() {
     <div className="App">
       {/* Contenido del componente Home */}
       {screenSelect=='Home' && <Home onHandleClick={setScreenSelect}/>}
-      {screenSelect=='Login' && <Login />}
-      {screenSelect=='NewUser' && <RegisterUser onChangeScreen={setScreenSelect}/>}
+      {screenSelect=='Login' && <Login users={usuarios}/>}
+      {screenSelect=='NewUser' && <RegisterUser onChangeScreen={setScreenSelect} users={usuarios}/>}
     </div>
   );
 }
