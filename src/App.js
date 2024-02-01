@@ -10,8 +10,9 @@ import { getUsers } from "./conexion/ConsultasUsers";
 function App() {
   const [screenSelect, setScreenSelect] = useState("Login");
   const [usuarios, setUsuarios] = useState([]);
+  const [idUser, setIdUser] = useState(null);
 
-  function obtenerUsuarios(){
+  function obtenerUsuarios() {
     getUsers({
       onCallBackData: (data) => {
         const userArray = data.map((item) => item.Usuario);
@@ -30,12 +31,26 @@ function App() {
   return (
     <div className="App">
       {/* Contenido del componente Home */}
-      {screenSelect === "Home" && <Home onChangeScreen={setScreenSelect} onRefleshUser={obtenerUsuarios}/>}
+      {screenSelect === "Home" && (
+        <Home
+          onChangeScreen={setScreenSelect}
+          onRefleshUser={obtenerUsuarios}
+          idUser={idUser}
+        />
+      )}
       {screenSelect === "Login" && (
-        <Login users={usuarios} onChangeScreen={setScreenSelect} />
+        <Login
+          users={usuarios}
+          onChangeScreen={setScreenSelect}
+          onInitUser={setIdUser}
+        />
       )}
       {screenSelect === "NewUser" && (
-        <RegisterUser onChangeScreen={setScreenSelect} users={usuarios} onRefleshUser={obtenerUsuarios}/>
+        <RegisterUser
+          onChangeScreen={setScreenSelect}
+          users={usuarios}
+          onRefleshUser={obtenerUsuarios}
+        />
       )}
     </div>
   );

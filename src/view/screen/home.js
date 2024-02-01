@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 //UI Material
 import { styled } from "@mui/material/styles";
@@ -26,6 +26,8 @@ import ListItemOption from "../components/listItemOption";
 import WelcomePage from "../options/welcome/welcomePage";
 import SettingsPage from "../options/settings/settingsPage";
 import ProovedoresPage from "../options/proovedores/proovedoresPage";
+//QUERIES
+import { getDataUser } from "../../conexion/ConsultasUsers";
 
 const drawerWidth = 240;
 
@@ -94,9 +96,22 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-export default function Home({ onChangeScreen, onRefleshUser }) {
+//------------------------------------------------------------------------//
+//-------------------------------MAIN-------------------------------------//
+//------------------------------------------------------------------------//
+export default function Home({ onChangeScreen, onRefleshUser, idUser }) {
   const [open, setOpen] = useState(false);
-
+  const [dataUser, setDataUser] = useState({});
+  useEffect(() => {
+    if (idUser) {
+      getDataUser({
+        onCallBackData: (data) => {
+          setDataUser(data);
+        },
+        sendData: {idUser:idUser}
+      });
+    }
+  }, [idUser]);
   const handleChangeDrawer = () => {
     setOpen(!open);
   };

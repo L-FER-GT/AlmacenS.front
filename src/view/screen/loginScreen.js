@@ -1,11 +1,5 @@
 import React, { useState } from "react";
-import {
-  Button,
-  Box,
-  Grid,
-  TextField,
-  Checkbox,
-} from "@mui/material";
+import { Button, Box, Grid, TextField, Checkbox } from "@mui/material";
 import Link from "@mui/material/Link";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Paper from "@mui/material/Paper";
@@ -20,7 +14,11 @@ import DialogRecuperarPassWord from "../dialogs/dilogAuxPassword";
 //Queries
 import { getValidateUser } from "../../conexion/ConsultasUsers";
 
-function Login({ onChangeScreen, users }) {
+//------------------------------------------------------------------------//
+//-------------------------------MAIN-------------------------------------//
+//------------------------------------------------------------------------//
+
+function Login({ onChangeScreen, users, onInitUser }) {
   const [form, setForm] = useState({
     User: "",
     Password: "",
@@ -43,23 +41,32 @@ function Login({ onChangeScreen, users }) {
       getValidateUser({
         sendData: form,
         onCallBackData: (response) => {
-          if(response.isCorrect){
-            onChangeScreen('Home');
-          }else{
-            setFormErrors({ ...formErrors, Password: "Ususario o contraseña incorrecta" });
+          if (response.isCorrect) {
+            onInitUser(response.idUser);
+            onChangeScreen("Home");
+          } else {
+            setFormErrors({
+              ...formErrors,
+              Password: "Ususario o contraseña incorrecta",
+            });
           }
         },
-        onError: (err)=>{},
+        onError: (err) => {},
       });
     } else {
       setFormErrors({ ...formErrors, User: "usuario Inexxistente" });
     }
   }
   //controll dialog recuperar password
-  const [openDialog, setOpenDialog]=useState(false)
+  const [openDialog, setOpenDialog] = useState(false);
   return (
     <Grid container style={{ height: "100%", width: "100%" }}>
-      <DialogRecuperarPassWord open={openDialog} onHandleClose={()=>{setOpenDialog(false)}}/>
+      <DialogRecuperarPassWord
+        open={openDialog}
+        onHandleClose={() => {
+          setOpenDialog(false);
+        }}
+      />
       <Grid item xs={6} style={{ height: "100%", width: "100%" }}>
         <Box
           component="img"

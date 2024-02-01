@@ -13,3 +13,7 @@ export const setRegisterNewUser = ({ onCallBackData=()=>{}, onError=()=>{}, send
 export const getValidateUser = ({ onCallBackData=()=>{}, onError=()=>{}, sendData=''}) => {
     postConsult(`${enlace}/validateUser`, { onCallBackData, onError, sendData})
 };
+
+export const getDataUser = ({ onCallBackData=()=>{}, onError=()=>{}, sendData=''}) => {
+    postConsult(`${enlace}/dataTrabajador`, { onCallBackData, onError, sendData})
+};
