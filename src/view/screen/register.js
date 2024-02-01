@@ -11,14 +11,15 @@ import {
 import Link from "@mui/material/Link";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Paper from "@mui/material/Paper";
-
-import axios from "axios";
 import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
 import LoginImage from "../../assets/Login.png";
+
+//querys
+import { setRegisterNewUser } from "../../conexion/ConsultasUsers";
 
 const RegisterUser = ({ onChangeScreen, users }) => {
   const [form, setForm] = useState({
@@ -45,7 +46,7 @@ const RegisterUser = ({ onChangeScreen, users }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [showPasswordVerif, setShowPasswordVerif] = useState(false);
   const [checkTerminos, setCheckTerminos] = useState(false);
-  const [errorTerminos, setErrorTerminos] = useState(false)
+  const [errorTerminos, setErrorTerminos] = useState(false);
   const handleInputChange = (e) => {
     setForm({
       ...form,
@@ -54,12 +55,6 @@ const RegisterUser = ({ onChangeScreen, users }) => {
     setFormErros({ ...formErrors, [e.target.name]: "" });
   };
 
-  const handleCheckboxChange = (e) => {
-    setForm({
-      ...form,
-      [e.target.name]: e.target.checked,
-    });
-  };
   const registerNewUser = (e) => {
     let errors = {};
     let flagDataValida = true;
@@ -92,11 +87,11 @@ const RegisterUser = ({ onChangeScreen, users }) => {
       errors.VerifPass = "Este campo no puede estar Vacio";
       flagDataValida = false;
     }
-    if(!checkTerminos){
-      setErrorTerminos(true)
+    if (!checkTerminos) {
+      setErrorTerminos(true);
       flagDataValida = false;
     }
-    if(users.includes(form.User)){
+    if (users.includes(form.User)) {
       errors.User = "Usuario Existente, pruebe con otro";
       flagDataValida = false;
     }
@@ -108,9 +103,9 @@ const RegisterUser = ({ onChangeScreen, users }) => {
   };
 
   const enviarRegistro = () => {
-    axios
-      .post("http://localhost:5000/newUser", form)
-      .then(() => {
+    setRegisterNewUser({
+      sendData: form,
+      onCallData: (data) => {
         setForm({
           DocumentoIdentidad: "",
           Nombres: "",
@@ -121,10 +116,11 @@ const RegisterUser = ({ onChangeScreen, users }) => {
           Password: "",
           VerifPass: "",
         });
-      })
-      .catch((error) => {
-        console.error("Error al agregar Cuenta ", error);
-      });
+      },
+      onError: (err) => {
+        console.error(err);
+      },
+    });
   };
 
   return (
@@ -300,11 +296,11 @@ const RegisterUser = ({ onChangeScreen, users }) => {
                 }
                 label="Acepto los términos y condiciones"
               />
-              {errorTerminos ?  (
+              {errorTerminos ? (
                 <Typography variant="body2" color="error">
                   Por favor, acepta los términos y condiciones.
                 </Typography>
-              ):null}
+              ) : null}
             </Grid>
             <Grid item container xs={12} justifyContent={"center"}>
               <Button
