@@ -74,7 +74,6 @@ const RegisterUser = ({ onChangeScreen, users, onRefleshUser }) => {
       flagDataValida = false;
     }
     if (form.Password !== form.VerifPass) {
-      errors.Password = "Las contraseñas no coinciden";
       errors.VerifPass = "Las contraseñas no coinciden";
       flagDataValida = false;
     }
@@ -106,7 +105,7 @@ const RegisterUser = ({ onChangeScreen, users, onRefleshUser }) => {
       sendData: form,
       onCallBackData: (data) => {
         onRefleshUser();
-        onChangeScreen("Home");
+        onChangeScreen("Login");
         setForm({
           DocumentoIdentidad: "",
           Nombres: "",

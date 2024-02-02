@@ -26,6 +26,7 @@ import ListItemOption from "../components/listItemOption";
 import WelcomePage from "../options/welcome/welcomePage";
 import SettingsPage from "../options/settings/settingsPage";
 import ProovedoresPage from "../options/proovedores/proovedoresPage";
+import MyProfilePage from "../options/myProfile/myProfile";
 //QUERIES
 import { getDataUser } from "../../conexion/ConsultasUsers";
 
@@ -101,14 +102,14 @@ const Drawer = styled(MuiDrawer, {
 //------------------------------------------------------------------------//
 export default function Home({ onChangeScreen, onRefleshUser, idUser }) {
   const [open, setOpen] = useState(false);
-  const [dataUser, setDataUser] = useState({});
+  const [dataUser, setDataUser] = useState(null);
   useEffect(() => {
     if (idUser) {
       getDataUser({
         onCallBackData: (data) => {
           setDataUser(data);
         },
-        sendData: {idUser:idUser}
+        sendData: { idUser: idUser },
       });
     }
   }, [idUser]);
@@ -180,7 +181,9 @@ export default function Home({ onChangeScreen, onRefleshUser, idUser }) {
                 >
                   <MenuItem
                     key={"itemMenuPerfil"}
-                    onClick={handleCloseUserMenu}
+                    onClick={() => {
+                      setSelectedPage("MyProfile");
+                    }}
                   >
                     <Typography textAlign="center">{"Perfil"}</Typography>
                   </MenuItem>
@@ -246,9 +249,13 @@ export default function Home({ onChangeScreen, onRefleshUser, idUser }) {
             }}
           >
             <DrawerHeader />
+            {/*Cambio de paginas */}
             {selectedPage === "Welcome" && <WelcomePage />}
             {selectedPage === "Proovedores" && <ProovedoresPage />}
             {selectedPage === "Settings" && <SettingsPage />}
+            {selectedPage === "MyProfile" && (
+              <MyProfilePage dataUser={dataUser} idUser={idUser}/>
+            )}
           </Box>
         </Grid>
         <Grid container item xs={12} justifyContent={"center"}>
