@@ -18,6 +18,9 @@ const ImageView = ({imageData,height,width}) => {
         setImageSrc(imageUrl);
       };
     }
+    else{
+      setImageSrc(null);
+    }
   }, [imageData]);
   return (
     <Box mt={5}>
@@ -36,7 +39,7 @@ const ImageView = ({imageData,height,width}) => {
             variant="body1"
             component="div"
           >
-            Contenido blanco por defecto
+            Aqui va la imagen
           </Typography>
         )}
         </Grid>

@@ -10,7 +10,12 @@ export const setImageUpdate = ({ onCallBackData=()=>{}, onError=()=>{}, sendData
     postImage(`${enlace}/newImage`, { onCallBackData, onError, sendData})
 };
 
-
 export const getImageByID = ({ onCallBackData=()=>{}, onError=()=>{}, sendData=''}) => {
     postConsult(`${enlace}/getImageById`, { onCallBackData, onError, sendData})
+};
+
+//CONTROL PROVEEDORES
+
+export const subirNuevoProveedor = ({ onCallBackData=()=>{}, onError=()=>{}, sendData=''}) => {
+    postConsult(`${enlace}/newProveedor`, { onCallBackData, onError, sendData})
 };

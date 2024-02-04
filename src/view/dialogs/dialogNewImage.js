@@ -8,7 +8,6 @@ import {
   Grid,
   TextField,
   Alert,
-  Typography,
   CircularProgress,
 } from "@mui/material";
 //COMPONENTS
@@ -28,10 +27,11 @@ const ImageUploadDialog = ({ open, onClose }) => {
       onCallBackData: (data) => {
         setLoading(false);
         setSubidoConExito(true);
+        setNombreImagen("");
+        setImage(null)
       },
       onError: (err) => {
         setLoading(false);
-        setSubidoConExito(true);
         console.error(err);
       },
     });
