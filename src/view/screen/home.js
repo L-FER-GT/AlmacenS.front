@@ -22,6 +22,7 @@ import LogoGen from "../../assets/logoS.jpeg";
 import { listaPaginas_1, listaPaginas_2 } from "../options/constantes";
 //Componentes
 import ListItemOption from "../components/listItemOption";
+import Footer from "../components/footerview";
 //Paginas
 import WelcomePage from "../options/welcome/welcomePage";
 import SettingsPage from "../options/settings/settingsPage";
@@ -259,30 +260,7 @@ export default function Home({ onChangeScreen, onRefleshUser, idUser }) {
           </Box>
         </Grid>
         <Grid container item xs={12} justifyContent={"center"}>
-          <footer
-            style={{ marginTop: "auto", textAlign: "center", padding: "10px" }}
-          >
-            <div>Este programa</div>
-            <div>
-              está sujeto a derechos de autor &copy;
-              {new Date().getFullYear()}
-            </div>
-            <div>
-              <a
-                href="https://github.com/L-FER-GT"
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{
-                  color: "blue",
-                  fontWeight: "normal",
-                  textDecoration: "none",
-                  transition: "color 0.3s, font-weight 0.3s",
-                }}
-              >
-                @copyrigt
-              </a>
-            </div>
-          </footer>
+          <Footer/>
         </Grid>
       </Grid>
     </Box>
