@@ -29,6 +29,7 @@ import SettingsPage from "../options/settings/settingsPage";
 import ProovedoresPage from "../options/proovedores/proovedoresPage";
 import MyProfilePage from "../options/myProfile/myProfile";
 import AlmacenPage from "../options/almacen/almacenPage";
+import ModelosPage from "../options/modelos/modelosPage";
 //QUERIES
 import { getDataUser } from "../../conexion/ConsultasUsers";
 
@@ -247,7 +248,7 @@ export default function Home({ onChangeScreen, onRefleshUser, idUser }) {
               flexGrow: 1,
               p: 3,
               backgroundColor: "#eee",
-              minHeight: "600px",
+              minHeight: "500px",
             }}
           >
             <DrawerHeader />
@@ -255,14 +256,15 @@ export default function Home({ onChangeScreen, onRefleshUser, idUser }) {
             {selectedPage === "Welcome" && <WelcomePage />}
             {selectedPage === "Proovedores" && <ProovedoresPage />}
             {selectedPage === "Settings" && <SettingsPage />}
-            {selectedPage === "Almacen" && <AlmacenPage idUser={idUser}/>}
+            {selectedPage === "Modelos" && <ModelosPage />}
+            {selectedPage === "Almacen" && <AlmacenPage idUser={idUser} />}
             {selectedPage === "MyProfile" && (
-              <MyProfilePage dataUser={dataUser} idUser={idUser}/>
+              <MyProfilePage dataUser={dataUser} idUser={idUser} />
             )}
           </Box>
         </Grid>
         <Grid container item xs={12} justifyContent={"center"}>
-          <Footer/>
+          <Footer />
         </Grid>
       </Grid>
     </Box>
