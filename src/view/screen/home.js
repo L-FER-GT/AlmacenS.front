@@ -28,6 +28,7 @@ import WelcomePage from "../options/welcome/welcomePage";
 import SettingsPage from "../options/settings/settingsPage";
 import ProovedoresPage from "../options/proovedores/proovedoresPage";
 import MyProfilePage from "../options/myProfile/myProfile";
+import AlmacenPage from "../options/almacen/almacenPage";
 //QUERIES
 import { getDataUser } from "../../conexion/ConsultasUsers";
 
@@ -254,6 +255,7 @@ export default function Home({ onChangeScreen, onRefleshUser, idUser }) {
             {selectedPage === "Welcome" && <WelcomePage />}
             {selectedPage === "Proovedores" && <ProovedoresPage />}
             {selectedPage === "Settings" && <SettingsPage />}
+            {selectedPage === "Almacen" && <AlmacenPage idUser={idUser}/>}
             {selectedPage === "MyProfile" && (
               <MyProfilePage dataUser={dataUser} idUser={idUser}/>
             )}

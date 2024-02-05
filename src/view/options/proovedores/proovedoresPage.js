@@ -16,11 +16,15 @@ import {
 import ImageView from "../../components/imageView";
 import ImageUploadDialog from "../../dialogs/dialogNewImage";
 //QUERIES
-import { getImages } from "../../../conexion/ConsultasProveedor";
+import { getImagesType } from "../../../conexion/ConsultasProveedor";
 import {
   getImageByID,
   subirNuevoProveedor,
 } from "../../../conexion/ConsultasProveedor";
+//TIPO DE IMAGEN
+const tipoImagen='LOGO'
+//------------------------------MAIN--------------------------//
+
 const ProovedoresPage = () => {
   const [openNewImage, setOpenNewImage] = useState(false);
   const [dataImage, setDataImage] = useState(null);
@@ -34,13 +38,14 @@ const ProovedoresPage = () => {
   });
 
   function cargarListaImagenes() {
-    getImages({
+    getImagesType({
       onCallBackData: (data) => {
         setListImage(data);
       },
       onError: (err) => {
         console.error(err);
       },
+      sendData: { tipo: tipoImagen },
     });
   }
   useEffect(() => {
@@ -90,6 +95,7 @@ const ProovedoresPage = () => {
     <Box p={3}>
       <ImageUploadDialog
         open={openNewImage}
+        tipoImagen={tipoImagen}
         onClose={() => {
           cargarListaImagenes();
           setOpenNewImage(false);

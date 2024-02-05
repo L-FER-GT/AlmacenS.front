@@ -8,7 +8,7 @@ import "./App.css";
 import { getUsers } from "./conexion/ConsultasUsers";
 
 function App() {
-  const [screenSelect, setScreenSelect] = useState("Home");
+  const [screenSelect, setScreenSelect] = useState("Login");
   const [usuarios, setUsuarios] = useState([]);
   const [idUser, setIdUser] = useState(null);
 

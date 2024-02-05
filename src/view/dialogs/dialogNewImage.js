@@ -14,7 +14,7 @@ import {
 import ImageUploader from "../components/imageUploader";
 //QUERIES
 import { setImageUpdate } from "../../conexion/ConsultasProveedor";
-const ImageUploadDialog = ({ open, onClose }) => {
+const ImageUploadDialog = ({ open, onClose, tipoImagen }) => {
   const [nombreImagen, setNombreImagen] = useState("");
   const [subidoConExito, setSubidoConExito] = useState(false);
   const [image, setImage] = useState(null);
@@ -23,7 +23,7 @@ const ImageUploadDialog = ({ open, onClose }) => {
   const handleSubirClick = () => {
     setLoading(true);
     setImageUpdate({
-      sendData: { nombre: nombreImagen, image: image },
+      sendData: { nombre: nombreImagen, image: image, tipo: tipoImagen},
       onCallBackData: (data) => {
         setLoading(false);
         setSubidoConExito(true);
