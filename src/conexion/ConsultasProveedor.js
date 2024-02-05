@@ -15,7 +15,7 @@ export const getImageByID = ({ onCallBackData=()=>{}, onError=()=>{}, sendData='
 };
 
 export const getImagesType = ({ onCallBackData=()=>{}, onError=()=>{}, sendData=''}) => {
-    postConsult(`${enlace}/getInfoImageByType`, { onCallBackData, onError })
+    postConsult(`${enlace}/getInfoImageByType`, { onCallBackData, onError, sendData})
 };
 
 
