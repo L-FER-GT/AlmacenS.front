@@ -21,6 +21,10 @@ export const getImagesType = ({ onCallBackData=()=>{}, onError=()=>{}, sendData=
 
 //CONTROL PROVEEDORES
 
+export const recuperarProveedores = ({ onCallBackData=()=>{}, onError=()=>{}}) => {
+    getConsult(`${enlace}/getProveedores`, { onCallBackData, onError })
+};
+
 export const subirNuevoProveedor = ({ onCallBackData=()=>{}, onError=()=>{}, sendData=''}) => {
     postConsult(`${enlace}/newProveedor`, { onCallBackData, onError, sendData})
 };

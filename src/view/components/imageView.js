@@ -1,7 +1,7 @@
 import React, { useState, useEffect} from 'react';
 import { Box, Grid, Paper, Typography } from '@mui/material';
 
-const ImageView = ({imageData,height,width}) => {
+const ImageView = ({imageData,height,width,text='Aqui va la imagen'}) => {
   const [imageSrc, setImageSrc] = useState(null);
   const [isLarge, setIsLarge]=useState(false);
   useEffect(() => {
@@ -23,7 +23,7 @@ const ImageView = ({imageData,height,width}) => {
     }
   }, [imageData]);
   return (
-    <Box mt={5}>
+    <Box mt={2}>
       <Paper elevation={5} style={{ width: width, height: height, position: 'relative' }}>
         <Grid container style={{height:'100%'}} alignItems={'center'}>
           
@@ -39,7 +39,7 @@ const ImageView = ({imageData,height,width}) => {
             variant="body1"
             component="div"
           >
-            Aqui va la imagen
+            {text}
           </Typography>
         )}
         </Grid>
