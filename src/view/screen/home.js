@@ -32,6 +32,7 @@ import AlmacenPage from "../options/almacen/almacenPage";
 import ModelosPage from "../options/modelos/modelosPage";
 //QUERIES
 import { getDataUser } from "../../conexion/ConsultasUsers";
+import AgregarProductosPage from "../options/productos/agregarProductoPage";
 
 const drawerWidth = 240;
 
@@ -257,10 +258,12 @@ export default function Home({ onChangeScreen, onRefleshUser, idUser }) {
             {selectedPage === "Proovedores" && <ProovedoresPage />}
             {selectedPage === "Settings" && <SettingsPage />}
             {selectedPage === "Modelos" && <ModelosPage />}
+            {selectedPage === "AgregarProducto" && <AgregarProductosPage />}
             {selectedPage === "Almacen" && <AlmacenPage idUser={idUser} />}
             {selectedPage === "MyProfile" && (
               <MyProfilePage dataUser={dataUser} idUser={idUser} />
             )}
+            
           </Box>
         </Grid>
         <Grid container item xs={12} justifyContent={"center"}>

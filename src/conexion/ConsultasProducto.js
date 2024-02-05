@@ -15,3 +15,12 @@ export const recuperarModelos = ({ onCallBackData=()=>{}, onError=()=>{}, sendDa
 export const editarModelo = ({ onCallBackData=()=>{}, onError=()=>{}, sendData=''}) => {
     postConsult(`${enlace}/editModelo`, { onCallBackData, onError, sendData})
 };
+//PRODUCTOS INDEPENDIENTE
+
+export const agregarProductos = ({ onCallBackData=()=>{}, onError=()=>{}, sendData=''}) => {
+    postConsult(`${enlace}/newProductoIndependiente`, { onCallBackData, onError, sendData})
+};
+
+export const consultarProductoPorInventario = ({ onCallBackData=()=>{}, onError=()=>{}, sendData=''}) => {
+    postConsult(`${enlace}/consultarProductoPorInventarioDisponibles`, { onCallBackData, onError, sendData})
+};
