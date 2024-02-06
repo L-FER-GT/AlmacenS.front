@@ -24,3 +24,13 @@ export const agregarProductos = ({ onCallBackData=()=>{}, onError=()=>{}, sendDa
 export const consultarProductoPorInventario = ({ onCallBackData=()=>{}, onError=()=>{}, sendData=''}) => {
     postConsult(`${enlace}/consultarProductoPorInventarioDisponibles`, { onCallBackData, onError, sendData})
 };
+
+export const obtenerImageByIdModel = ({ onCallBackData=()=>{}, onError=()=>{}, sendData=''}) => {
+    postConsult(`${enlace}/obtenerImagenProducto`, { onCallBackData, onError, sendData})
+};
+
+export const updateDisponibilidadProducto = ({ onCallBackData=()=>{}, onError=()=>{}, sendData=''}) => {
+    postConsult(`${enlace}/actualizarDisponibilidad`, { onCallBackData, onError, sendData})
+};
+
+

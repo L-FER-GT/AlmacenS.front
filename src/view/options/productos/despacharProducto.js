@@ -20,46 +20,24 @@ import MUIDataTable from "mui-datatables";
 //COMPONENTES
 import ImageView from "../../components/imageView";
 import useConfigColumns from "./configColumn";
+import useConfigColumnsDes from "./configColumnDes";
 //QUERIES
 import { recuperarAlmecenes } from "../../../conexion/ConsultasAlmacen";
 import { recuperarModelos } from "../../../conexion/ConsultasProducto";
 import { getImageByID } from "../../../conexion/ConsultasProveedor";
 import { agregarProductos } from "../../../conexion/ConsultasProducto";
+import { consultarProductoPorInventario } from "../../../conexion/ConsultasProducto";
+import { obtenerImageByIdModel } from "../../../conexion/ConsultasProducto";
+import { updateDisponibilidadProducto } from "../../../conexion/ConsultasProducto";
 //-------------------MAIN--------------------------//
-const DespachaarProductosPage = () => {
+const DespacharProductosPage = () => {
   const [dataImage, setDataImage] = useState(null);
-  const [cantProduct, setCantProduct] = useState(0);
-  const [fechaSelect, setFechaSelec] = useState(dayjs());
-  const [calzado, setCalzado] = useState({
-    ID_Producto: "",
-    Inventario_Asociado: "",
-    FechaIngreso: new Date(),
-    Observaciones: "",
-    Color: "",
-    Talla: "",
-    Precio: 0.0,
-  });
-  const handleCalzadoChange = (e) => {
-    setCalzado({
-      ...calzado,
-      [e.target.name]: e.target.value,
-    });
-  };
-  const handleDateChange = (e) => {
-    setFechaSelec(e);
-    const fechaDate = e.toDate();
-    setCalzado({
-      ...calzado,
-      FechaIngreso: fechaDate,
-    });
-  };
+
   //------CONTROL EXISTENCIA------//
-  const [listaModelos, setListaModelos] = useState([]);
   const [listaAlmacenes, setListaAlmacenes] = useState([]);
-
   const [almacenSelected, setAlmacenSelected] = useState("");
-  const [modeloSelected, setModeloSelected] = useState("");
-
+  const [dataTablaAlmacen, setDataTablaAlmacen] = useState([]);
+  const [dataTablaDespachar, setDataTablaDespachar] = useState([]);
   function cargarListaAlmacenes() {
     recuperarAlmecenes({
       onCallBackData: (data) => {
@@ -71,37 +49,28 @@ const DespachaarProductosPage = () => {
     });
   }
 
-  function cargarListaModelos() {
-    recuperarModelos({
+  function seleccionarAlmacen(e) {
+    setAlmacenSelected(e.target.value);
+    setDataTablaDespachar([]);
+    consultarProductoPorInventario({
       onCallBackData: (data) => {
-        setListaModelos(data);
+        const intermediario = data.map((objeto) => {
+          return {
+            ...objeto,
+            FechaIngreso: new Date(objeto.FechaIngreso),
+            FechaSalida: new Date(objeto.FechaSalida),
+          };
+        });
+        setDataTablaAlmacen(intermediario);
       },
       onError: (err) => {
         console.error(err);
       },
+      sendData: { Inventario_Asociado: e.target.value },
     });
-  }
-  function seleccionarModelo(e) {
-    setModeloSelected(e.target.value);
-    handleCalzadoChange(e);
-    const modelosEncontrado = listaModelos.filter(
-      (modelo) => modelo.ID_Producto === e.target.value
-    );
-    const modeloActual = modelosEncontrado[0];
-    getImageByID({
-      onCallBackData: (data) => {
-        setDataImage(data);
-      },
-      sendData: { id: modeloActual.Imagen_Asociada },
-    });
-  }
-  function seleccionarAlmacen(e) {
-    handleCalzadoChange(e);
-    setAlmacenSelected(e.target.value);
   }
   useEffect(() => {
     cargarListaAlmacenes();
-    cargarListaModelos();
   }, []);
   //CONTROL DE TABLA
   const options = {
@@ -121,57 +90,100 @@ const DespachaarProductosPage = () => {
       },
     },
   };
-  const [dataTabla, setDataTabla] = useState([]);
+  const optionsAlmacen = {
+    download: false,
+    filter: false,
+    print: false,
+    viewColumns: false,
+    search: false,
+    selectableRows: "none",
+    elevation: 5,
+    textLabels: {
+      body: {
+        noMatch: "No hay datos en la tabla (Selecciones un Alamcen)",
+      },
+      pagination: {
+        rowsPerPage: "Mostrar",
+      },
+    },
+  };
   const estadoView = [
     { name: "ID_Producto", label: "ID Producto" },
-    { name: "Inventario_Asociado", label: "Inventario Asociado" },
     { name: "Observaciones", label: "Observaciones" },
     { name: "Color", label: "Color" },
     { name: "Talla", label: "Talla" },
     { name: "Precio", label: "Precio" },
   ];
 
-  function agregarElementoTable() {
-    let prevDataTabla = dataTabla;
-    for (let i = 0; i < cantProduct; i++) {
-      let auxElement = { ...calzado };
-      prevDataTabla.push(auxElement);
-    }
-    setDataTabla([...prevDataTabla]);
-  }
-
   const handleDelete = (index) => {
     // Crea una nueva copia del array dataTabla sin el elemento en el índice dado
     const newDataTabla = [
-      ...dataTabla.slice(0, index),
-      ...dataTabla.slice(index + 1),
+      ...dataTablaAlmacen.slice(0, index),
+      ...dataTablaAlmacen.slice(index + 1),
     ];
-    setDataTabla([...newDataTabla]);
+    setDataTablaAlmacen([...newDataTabla]);
   };
-  const columns = useConfigColumns({
-    estadoView: estadoView,
-    deleteFila: handleDelete,
-    dataTabla: dataTabla,
-  });
-  //------CONTROL SUBIDA DE DATOS--------------//
-  function subirCalzados() {
-    const intermediarioData = [...dataTabla];
-    for (let i = 0; i < dataTabla.length; i++) {
-      agregarProductos({
-        onCallBackData: (data) => {},
-        sendData: intermediarioData[i],
+  const moverElementoDespachar = (index) => {
+    if (index >= 0 && index < dataTablaAlmacen.length) {
+      const elementoMovido = dataTablaAlmacen.splice(index, 1)[0];
+      setDataTablaDespachar((prevDespachar) => [
+        ...prevDespachar,
+        elementoMovido,
+      ]);
+      setDataTablaAlmacen([...dataTablaAlmacen]);
+    }
+  };
+  const deleteElementoDespachar = (index) => {
+    if (index >= 0 && index < dataTablaDespachar.length) {
+      const elementoMovido = dataTablaDespachar.splice(index, 1)[0];
+      setDataTablaAlmacen((prev) => [...prev, elementoMovido]);
+      setDataTablaDespachar([...dataTablaDespachar]);
+    }
+  };
+  const viewElement = (index) => {
+    if (index >= 0 && index < dataTablaAlmacen.length) {
+      const elementoSeleccionado = dataTablaAlmacen[index];
+      obtenerImageByIdModel({
+        onCallBackData: (data) => {
+          setDataImage(data.Image);
+        },
         onError: (err) => {
           console.error(err);
         },
+        sendData: { idProducto: elementoSeleccionado.ID_Producto },
       });
     }
-    setDataTabla([]);
+  };
+  const columns = useConfigColumns({
+    estadoView: estadoView,
+    deleteFila: deleteElementoDespachar,
+    dataTabla: dataTablaAlmacen,
+  });
+  const columnsAlmacen = useConfigColumnsDes({
+    estadoView: estadoView,
+    addFila: moverElementoDespachar,
+    viewFila: viewElement,
+    dataTabla: dataTablaAlmacen,
+  });
+
+  //------CONTROL SUBIDA DE DATOS--------------//
+  function handleClickDespachar() {
+    const intermediarioData = [...dataTablaDespachar];
+    for (let i = 0; i < intermediarioData.length; i++) {
+      updateDisponibilidadProducto({
+        onError: (err) => {
+          console.error(err);
+        },
+        sendData: { Cod_par: intermediarioData[i].Cod_par },
+      });
+    }
+    setDataTablaDespachar([]);
   }
   return (
     <Box p={3}>
       <Paper elevation={3} style={{ padding: "20px" }}>
         <Grid container>
-          <Grid item container xs={10}>
+          <Grid item container xs={9}>
             <Grid container item xs={12} spacing={2}>
               <Grid item xs={3}>
                 <FormControl fullWidth margin="normal">
@@ -189,120 +201,17 @@ const DespachaarProductosPage = () => {
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={3}>
-                <FormControl fullWidth margin="normal">
-                  <InputLabel>Seleccionar Modelos</InputLabel>
-                  <Select
-                    name="ID_Producto"
-                    value={modeloSelected}
-                    onChange={seleccionarModelo}
-                  >
-                    {listaModelos.map((item) => (
-                      <MenuItem key={item.ID_Producto} value={item.ID_Producto}>
-                        {item.Nombre}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item xs={2} />
-              <Grid item container xs={3} justifyContent={"flex-end"}>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={["DatePicker", "DatePicker"]}>
-                    <DatePicker
-                      label="Fecha de ingreso"
-                      margin="dense"
-                      size="small"
-                      fullWidth
-                      format="DD/MM/YYYY"
-                      name="FechaIngreso"
-                      value={fechaSelect}
-                      onChange={handleDateChange}
-                    />
-                  </DemoContainer>
-                </LocalizationProvider>
-              </Grid>
             </Grid>
-            <Grid item xs={4}>
-              <Grid item container xs={12} spacing={2}>
-                <Grid item xs={6}>
-                  <TextField
-                    variant="outlined"
-                    margin="dense"
-                    size="small"
-                    fullWidth
-                    label="Color"
-                    name="Color"
-                    value={calzado.Color}
-                    onChange={handleCalzadoChange}
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    variant="outlined"
-                    margin="dense"
-                    size="small"
-                    fullWidth
-                    label="Talla"
-                    type="number"
-                    name="Talla"
-                    value={calzado.Talla}
-                    onChange={handleCalzadoChange}
-                  />
-                </Grid>
-              </Grid>
-              <Grid item container xs={12} spacing={2}>
-                <Grid item xs={6}>
-                  <TextField
-                    variant="outlined"
-                    margin="dense"
-                    size="small"
-                    fullWidth
-                    type="number"
-                    label="Precio"
-                    name="Precio"
-                    value={calzado.Precio}
-                    onChange={handleCalzadoChange}
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    variant="outlined"
-                    margin="dense"
-                    size="small"
-                    fullWidth
-                    label="Cantidad"
-                    type="number"
-                    name="cantidad"
-                    value={cantProduct}
-                    onChange={(e) => {
-                      setCantProduct(e.target.value);
-                    }}
-                  />
-                </Grid>
-              </Grid>
-            </Grid>
-            {/* Segunda mitad */}
-            <Grid item container xs={8} justifyContent={"center"}>
-              <Grid item container xs={11} justifyContent={"center"}>
-                <TextField
-                  variant="outlined"
-                  margin="dense"
-                  size="small"
-                  fullWidth
-                  label="Observaciones"
-                  name="Observaciones"
-                  value={calzado.Observaciones}
-                  onChange={handleCalzadoChange}
-                />
-              </Grid>
 
-              <Button variant="contained" onClick={agregarElementoTable}>
-                Agregar
-              </Button>
+            <Grid item xs={12}>
+              <MUIDataTable
+                data={dataTablaAlmacen}
+                columns={columnsAlmacen}
+                options={optionsAlmacen}
+              />
             </Grid>
           </Grid>
-          <Grid item container xs={2}>
+          <Grid item container xs={3} justifyContent={"flex-end"}>
             <ImageView
               imageData={dataImage}
               height={"150px"}
@@ -313,10 +222,14 @@ const DespachaarProductosPage = () => {
         </Grid>
         <Grid container justifyContent={"center"}>
           <Grid item xs={12} style={{ height: "20px" }} />
+          <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
+            Despachar Productos
+          </h2>
+          <Grid item xs={12} style={{ height: "20px" }} />
           <Grid container spacing={5}>
             <Grid item xs={10}>
               <MUIDataTable
-                data={dataTabla}
+                data={dataTablaDespachar}
                 columns={columns}
                 options={options}
                 // className={classes.muiPadding}
@@ -325,10 +238,10 @@ const DespachaarProductosPage = () => {
             <Grid item container xs={2} alignContent={"center"}>
               <Button
                 variant="contained"
-                onClick={subirCalzados}
+                onClick={handleClickDespachar}
                 style={{ height: "100px" }}
               >
-                Subir
+                Despachar
               </Button>
             </Grid>
           </Grid>
@@ -338,4 +251,4 @@ const DespachaarProductosPage = () => {
   );
 };
 
-export default DespachaarProductosPage;
+export default DespacharProductosPage;

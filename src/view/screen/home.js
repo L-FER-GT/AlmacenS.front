@@ -30,6 +30,7 @@ import ProovedoresPage from "../options/proovedores/proovedoresPage";
 import MyProfilePage from "../options/myProfile/myProfile";
 import AlmacenPage from "../options/almacen/almacenPage";
 import ModelosPage from "../options/modelos/modelosPage";
+import DespacharProductosPage from "../options/productos/despacharProducto";
 //QUERIES
 import { getDataUser } from "../../conexion/ConsultasUsers";
 import AgregarProductosPage from "../options/productos/agregarProductoPage";
@@ -259,6 +260,7 @@ export default function Home({ onChangeScreen, onRefleshUser, idUser }) {
             {selectedPage === "Settings" && <SettingsPage />}
             {selectedPage === "Modelos" && <ModelosPage />}
             {selectedPage === "AgregarProducto" && <AgregarProductosPage />}
+            {selectedPage === "DespacharProductos" && <DespacharProductosPage />}
             {selectedPage === "Almacen" && <AlmacenPage idUser={idUser} />}
             {selectedPage === "MyProfile" && (
               <MyProfilePage dataUser={dataUser} idUser={idUser} />

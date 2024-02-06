@@ -4,7 +4,6 @@ import Paper from "@mui/material/Paper";
 import { modifyDataUser } from "../../../conexion/ConsultasUsers";
 
 const MyProfilePage = ({ dataUser, idUser }) => {
-    
   const [form, setForm] = useState({
     DocumentoIdentidad: "",
     Nombres: "",
@@ -63,123 +62,118 @@ const MyProfilePage = ({ dataUser, idUser }) => {
     }
 
     if (flagDataValida) {
-        const newValueUser={...form,idUser:idUser}
-        modifyDataUser({sendData:newValueUser})
+      const newValueUser = { ...form, idUser: idUser };
+      modifyDataUser({ sendData: newValueUser });
     } else {
       setFormErros({ ...formErrors, ...errors });
     }
   };
   return (
-    <Box
-      sx={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "50vh", // Ajusta la altura según tus necesidades
-      }}
-    >
-      <Grid container justifyContent={"center"} alignContent={"center"}>
-        <Grid container item xs={4}>
-          <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
-            Editar Cuenta
-          </h2>
-          <Grid container item xs={12} spacing={2}>
-            <Grid item xs={6}>
+    <Box p={3}>
+      <Paper elevation={3} style={{ padding: "20px" }}>
+        <Grid container justifyContent={"center"} alignContent={"center"}>
+          <Grid container item xs={4}>
+            <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
+              Editar Cuenta
+            </h2>
+            <Grid container item xs={12} spacing={2}>
+              <Grid item xs={6}>
+                <TextField
+                  variant="outlined"
+                  margin="dense"
+                  size="small"
+                  fullWidth
+                  label="Nombres"
+                  name="Nombres"
+                  value={form.Nombres}
+                  error={formErrors.Nombres !== ""}
+                  helperText={formErrors.Nombres}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  variant="outlined"
+                  margin="dense"
+                  size="small"
+                  fullWidth
+                  label="Apellidos"
+                  name="Apellidos"
+                  value={form.Apellidos}
+                  error={formErrors.Apellidos !== ""}
+                  helperText={formErrors.Apellidos}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+            </Grid>
+            <Grid item xs={12}>
               <TextField
                 variant="outlined"
                 margin="dense"
                 size="small"
                 fullWidth
-                label="Nombres"
-                name="Nombres"
-                value={form.Nombres}
-                error={formErrors.Nombres !== ""}
-                helperText={formErrors.Nombres}
+                label="Documento de Identidad"
+                name="DocumentoIdentidad"
+                value={form.DocumentoIdentidad}
+                error={formErrors.DocumentoIdentidad !== ""}
+                helperText={formErrors.DocumentoIdentidad}
                 onChange={handleInputChange}
               />
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12}>
               <TextField
                 variant="outlined"
                 margin="dense"
                 size="small"
                 fullWidth
-                label="Apellidos"
-                name="Apellidos"
-                value={form.Apellidos}
-                error={formErrors.Apellidos !== ""}
-                helperText={formErrors.Apellidos}
+                label="Telefono"
+                name="Contacto"
+                value={form.Contacto}
                 onChange={handleInputChange}
               />
             </Grid>
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              variant="outlined"
-              margin="dense"
-              size="small"
-              fullWidth
-              label="Documento de Identidad"
-              name="DocumentoIdentidad"
-              value={form.DocumentoIdentidad}
-              error={formErrors.DocumentoIdentidad !== ""}
-              helperText={formErrors.DocumentoIdentidad}
-              onChange={handleInputChange}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              variant="outlined"
-              margin="dense"
-              size="small"
-              fullWidth
-              label="Telefono"
-              name="Contacto"
-              value={form.Contacto}
-              onChange={handleInputChange}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              variant="outlined"
-              margin="dense"
-              size="small"
-              fullWidth
-              label="Cargo en la Empresa"
-              name="Cargo"
-              value={form.Cargo}
-              onChange={handleInputChange}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              variant="outlined"
-              margin="dense"
-              size="small"
-              fullWidth
-              label="Usuario"
-              name="User"
-              value={form.User}
-              error={formErrors.User !== ""}
-              helperText={formErrors.User}
-              onChange={handleInputChange}
-              disabled={true}
-            />
-          </Grid>
-          <Grid item xs={12} style={{ height: "20px" }} />
+            <Grid item xs={12}>
+              <TextField
+                variant="outlined"
+                margin="dense"
+                size="small"
+                fullWidth
+                label="Cargo en la Empresa"
+                name="Cargo"
+                value={form.Cargo}
+                onChange={handleInputChange}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                variant="outlined"
+                margin="dense"
+                size="small"
+                fullWidth
+                label="Usuario"
+                name="User"
+                value={form.User}
+                error={formErrors.User !== ""}
+                helperText={formErrors.User}
+                onChange={handleInputChange}
+                disabled={true}
+              />
+            </Grid>
+            <Grid item xs={12} style={{ height: "20px" }} />
 
-          <Grid item container xs={12} justifyContent={"center"}>
-            <Button
-              fullWidth
-              color="primary"
-              variant="contained"
-              onClick={editUser}
-            >
-              Editar
-            </Button>
+            <Grid item container xs={12} justifyContent={"center"}>
+              <Button
+                fullWidth
+                color="primary"
+                variant="contained"
+                onClick={editUser}
+              >
+                Editar
+              </Button>
+            </Grid>
           </Grid>
         </Grid>
-      </Grid>
+      </Paper>
     </Box>
   );
 };
