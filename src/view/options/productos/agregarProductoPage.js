@@ -25,8 +25,9 @@ import { recuperarAlmecenes } from "../../../conexion/ConsultasAlmacen";
 import { recuperarModelos } from "../../../conexion/ConsultasProducto";
 import { getImageByID } from "../../../conexion/ConsultasProveedor";
 import { agregarProductos } from "../../../conexion/ConsultasProducto";
+import { recuperarConexionesAlmacen } from "../../../conexion/ConsultasAlmacen";
 //-------------------MAIN--------------------------//
-const AgregarProductosPage = () => {
+const AgregarProductosPage = ({idUser}) => {
   const [dataImage, setDataImage] = useState(null);
   const [cantProduct, setCantProduct] = useState(0);
   const [fechaSelect, setFechaSelec] = useState(dayjs());
@@ -56,7 +57,8 @@ const AgregarProductosPage = () => {
   //------CONTROL EXISTENCIA------//
   const [listaModelos, setListaModelos] = useState([]);
   const [listaAlmacenes, setListaAlmacenes] = useState([]);
-
+  const [listaConecciones, setListaConecciones] = useState([]);
+  const [listaAlmacenesAsignados, setListaAlmacenesAsignados] = useState([]);
   const [almacenSelected, setAlmacenSelected] = useState("");
   const [modeloSelected, setModeloSelected] = useState("");
 
@@ -81,6 +83,28 @@ const AgregarProductosPage = () => {
       },
     });
   }
+  function cargarListaConexiones() {
+    recuperarConexionesAlmacen({
+      onCallBackData: (data) => {
+        const arrayFiltrado = data.filter(
+          (objeto) => objeto.ID_Empleado === idUser
+        );
+        const arrayDeIDAlmacen = arrayFiltrado.map(
+          (objeto) => objeto.ID_Almacen
+        );
+        setListaConecciones(arrayDeIDAlmacen);
+      },
+      onError: (err) => {
+        console.error(err);
+      },
+    });
+  }
+  function determinarAlmacenesAsignados() {
+    const arrayAsignados = listaAlmacenes.filter((objeto) =>
+      listaConecciones.includes(objeto.ID_Almacen)
+    );
+    setListaAlmacenesAsignados(arrayAsignados);
+  }
   function seleccionarModelo(e) {
     setModeloSelected(e.target.value);
     handleCalzadoChange(e);
@@ -102,7 +126,13 @@ const AgregarProductosPage = () => {
   useEffect(() => {
     cargarListaAlmacenes();
     cargarListaModelos();
+    cargarListaConexiones();
   }, []);
+  useEffect(() => {
+    if (listaConecciones.length > 0) {
+      determinarAlmacenesAsignados();
+    }
+  }, [listaConecciones]);
   //CONTROL DE TABLA
   const options = {
     download: false,
@@ -181,7 +211,7 @@ const AgregarProductosPage = () => {
                     value={almacenSelected}
                     onChange={seleccionarAlmacen}
                   >
-                    {listaAlmacenes.map((item) => (
+                    {listaAlmacenesAsignados.map((item) => (
                       <MenuItem key={item.ID_Almacen} value={item.ID_Almacen}>
                         {item.Referencia}
                       </MenuItem>

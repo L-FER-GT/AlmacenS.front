@@ -29,8 +29,9 @@ import { agregarProductos } from "../../../conexion/ConsultasProducto";
 import { consultarProductoPorInventario } from "../../../conexion/ConsultasProducto";
 import { obtenerImageByIdModel } from "../../../conexion/ConsultasProducto";
 import { updateDisponibilidadProducto } from "../../../conexion/ConsultasProducto";
+import { recuperarConexionesAlmacen } from "../../../conexion/ConsultasAlmacen";
 //-------------------MAIN--------------------------//
-const DespacharProductosPage = () => {
+const DespacharProductosPage = ({ idUser }) => {
   const [dataImage, setDataImage] = useState(null);
 
   //------CONTROL EXISTENCIA------//
@@ -38,6 +39,8 @@ const DespacharProductosPage = () => {
   const [almacenSelected, setAlmacenSelected] = useState("");
   const [dataTablaAlmacen, setDataTablaAlmacen] = useState([]);
   const [dataTablaDespachar, setDataTablaDespachar] = useState([]);
+  const [listaConecciones, setListaConecciones] = useState([]);
+  const [listaAlmacenesAsignados, setListaAlmacenesAsignados] = useState([]);
   function cargarListaAlmacenes() {
     recuperarAlmecenes({
       onCallBackData: (data) => {
@@ -48,7 +51,33 @@ const DespacharProductosPage = () => {
       },
     });
   }
-
+  function cargarListaConexiones() {
+    recuperarConexionesAlmacen({
+      onCallBackData: (data) => {
+        const arrayFiltrado = data.filter(
+          (objeto) => objeto.ID_Empleado === idUser
+        );
+        const arrayDeIDAlmacen = arrayFiltrado.map(
+          (objeto) => objeto.ID_Almacen
+        );
+        setListaConecciones(arrayDeIDAlmacen);
+      },
+      onError: (err) => {
+        console.error(err);
+      },
+    });
+  }
+  function determinarAlmacenesAsignados() {
+    const arrayAsignados = listaAlmacenes.filter((objeto) =>
+      listaConecciones.includes(objeto.ID_Almacen)
+    );
+    setListaAlmacenesAsignados(arrayAsignados);
+  }
+  useEffect(() => {
+    if (listaConecciones.length > 0) {
+      determinarAlmacenesAsignados();
+    }
+  }, [listaConecciones]);
   function seleccionarAlmacen(e) {
     setAlmacenSelected(e.target.value);
     setDataTablaDespachar([]);
@@ -71,6 +100,7 @@ const DespacharProductosPage = () => {
   }
   useEffect(() => {
     cargarListaAlmacenes();
+    cargarListaConexiones();
   }, []);
   //CONTROL DE TABLA
   const options = {
@@ -115,14 +145,6 @@ const DespacharProductosPage = () => {
     { name: "Precio", label: "Precio" },
   ];
 
-  const handleDelete = (index) => {
-    // Crea una nueva copia del array dataTabla sin el elemento en el índice dado
-    const newDataTabla = [
-      ...dataTablaAlmacen.slice(0, index),
-      ...dataTablaAlmacen.slice(index + 1),
-    ];
-    setDataTablaAlmacen([...newDataTabla]);
-  };
   const moverElementoDespachar = (index) => {
     if (index >= 0 && index < dataTablaAlmacen.length) {
       const elementoMovido = dataTablaAlmacen.splice(index, 1)[0];
@@ -193,7 +215,7 @@ const DespacharProductosPage = () => {
                     value={almacenSelected}
                     onChange={seleccionarAlmacen}
                   >
-                    {listaAlmacenes.map((item) => (
+                    {listaAlmacenesAsignados.map((item) => (
                       <MenuItem key={item.ID_Almacen} value={item.ID_Almacen}>
                         {item.Referencia}
                       </MenuItem>

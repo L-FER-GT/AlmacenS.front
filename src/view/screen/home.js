@@ -260,9 +260,11 @@ export default function Home({ onChangeScreen, onRefleshUser, idUser }) {
             {selectedPage === "Proovedores" && <ProovedoresPage />}
             {selectedPage === "Settings" && <SettingsPage />}
             {selectedPage === "Modelos" && <ModelosPage />}
-            {selectedPage === "AgregarProducto" && <AgregarProductosPage />}
+            {selectedPage === "AgregarProducto" && (
+              <AgregarProductosPage idUser={idUser} />
+            )}
             {selectedPage === "DespacharProductos" && (
-              <DespacharProductosPage />
+              <DespacharProductosPage idUser={idUser} />
             )}
             {selectedPage === "Top10" && <MasVendidosPage />}
 
