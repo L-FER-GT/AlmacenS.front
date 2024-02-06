@@ -6,10 +6,11 @@ import WarehouseIcon from "@mui/icons-material/Warehouse";
 import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import FactoryIcon from '@mui/icons-material/Factory';
-
+import StarIcon from '@mui/icons-material/Star';
 
 export const listaPaginas_1 = [
   { value: "Welcome", text: "Inicio", icon: HomeIcon },
+  { value: "Top10", text: "Top Mas Pedidos", icon: StarIcon },
   {
     value: "AgregarProducto",
     text: "Agregar Productos",

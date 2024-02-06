@@ -34,6 +34,7 @@ import DespacharProductosPage from "../options/productos/despacharProducto";
 //QUERIES
 import { getDataUser } from "../../conexion/ConsultasUsers";
 import AgregarProductosPage from "../options/productos/agregarProductoPage";
+import MasVendidosPage from "../options/masVendidos/masVendidosPage";
 
 const drawerWidth = 240;
 
@@ -260,12 +261,15 @@ export default function Home({ onChangeScreen, onRefleshUser, idUser }) {
             {selectedPage === "Settings" && <SettingsPage />}
             {selectedPage === "Modelos" && <ModelosPage />}
             {selectedPage === "AgregarProducto" && <AgregarProductosPage />}
-            {selectedPage === "DespacharProductos" && <DespacharProductosPage />}
+            {selectedPage === "DespacharProductos" && (
+              <DespacharProductosPage />
+            )}
+            {selectedPage === "Top10" && <MasVendidosPage />}
+
             {selectedPage === "Almacen" && <AlmacenPage idUser={idUser} />}
             {selectedPage === "MyProfile" && (
               <MyProfilePage dataUser={dataUser} idUser={idUser} />
             )}
-            
           </Box>
         </Grid>
         <Grid container item xs={12} justifyContent={"center"}>
