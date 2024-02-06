@@ -27,7 +27,7 @@ import { getImageByID } from "../../../conexion/ConsultasProveedor";
 import { agregarProductos } from "../../../conexion/ConsultasProducto";
 import { recuperarConexionesAlmacen } from "../../../conexion/ConsultasAlmacen";
 //-------------------MAIN--------------------------//
-const AgregarProductosPage = ({idUser}) => {
+const AgregarProductosPage = ({ idUser }) => {
   const [dataImage, setDataImage] = useState(null);
   const [cantProduct, setCantProduct] = useState(0);
   const [fechaSelect, setFechaSelec] = useState(dayjs());
@@ -327,7 +327,11 @@ const AgregarProductosPage = ({idUser}) => {
                 />
               </Grid>
 
-              <Button variant="contained" onClick={agregarElementoTable}>
+              <Button
+                variant="contained"
+                onClick={agregarElementoTable}
+                disabled={almacenSelected === "" || modeloSelected === ""}
+              >
                 Agregar
               </Button>
             </Grid>
@@ -357,6 +361,7 @@ const AgregarProductosPage = ({idUser}) => {
                 variant="contained"
                 onClick={subirCalzados}
                 style={{ height: "100px" }}
+                disabled={almacenSelected === ""}
               >
                 Subir
               </Button>

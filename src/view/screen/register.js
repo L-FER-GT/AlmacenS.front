@@ -77,6 +77,10 @@ const RegisterUser = ({ onChangeScreen, users, onRefleshUser }) => {
       errors.VerifPass = "Las contraseñas no coinciden";
       flagDataValida = false;
     }
+    if (form.Password.length < 4) {
+      errors.Password = "Tu contraseña debe tener al menos 4 caracteres";
+      flagDataValida = false;
+    }
     if (form.Password === "") {
       errors.Password = "Este campo no puede estar Vacio";
       flagDataValida = false;

@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Button, Box, Grid, TextField } from "@mui/material";
+import { Button, Box, Grid, TextField, Alert } from "@mui/material";
 import Paper from "@mui/material/Paper";
 import { modifyDataUser } from "../../../conexion/ConsultasUsers";
 
-const MyProfilePage = ({ dataUser, idUser }) => {
+const MyProfilePage = ({ dataUser, idUser, onRegenerateUser }) => {
+  const [subidoConExito, setSubidoConExito] = useState(false);
   const [form, setForm] = useState({
     DocumentoIdentidad: "",
     Nombres: "",
@@ -63,7 +64,16 @@ const MyProfilePage = ({ dataUser, idUser }) => {
 
     if (flagDataValida) {
       const newValueUser = { ...form, idUser: idUser };
-      modifyDataUser({ sendData: newValueUser });
+      modifyDataUser({
+        onCallBackData: (data) => {
+          setSubidoConExito(true);
+          onRegenerateUser();
+        },
+        sendData: newValueUser,
+        onError: (err) => {
+          console.error(err);
+        },
+      });
     } else {
       setFormErros({ ...formErrors, ...errors });
     }
@@ -171,6 +181,14 @@ const MyProfilePage = ({ dataUser, idUser }) => {
                 Editar
               </Button>
             </Grid>
+            {subidoConExito && (
+              <Alert
+                severity="success"
+                onClose={() => setSubidoConExito(false)}
+              >
+                Subido con éxito
+              </Alert>
+            )}
           </Grid>
         </Grid>
       </Paper>

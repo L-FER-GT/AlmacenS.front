@@ -109,14 +109,17 @@ const Drawer = styled(MuiDrawer, {
 export default function Home({ onChangeScreen, onRefleshUser, idUser }) {
   const [open, setOpen] = useState(false);
   const [dataUser, setDataUser] = useState(null);
+  function regenerateDataUser() {
+    getDataUser({
+      onCallBackData: (data) => {
+        setDataUser(data);
+      },
+      sendData: { idUser: idUser },
+    });
+  }
   useEffect(() => {
     if (idUser) {
-      getDataUser({
-        onCallBackData: (data) => {
-          setDataUser(data);
-        },
-        sendData: { idUser: idUser },
-      });
+      regenerateDataUser();
     }
   }, [idUser]);
   const handleChangeDrawer = () => {
@@ -270,7 +273,11 @@ export default function Home({ onChangeScreen, onRefleshUser, idUser }) {
 
             {selectedPage === "Almacen" && <AlmacenPage idUser={idUser} />}
             {selectedPage === "MyProfile" && (
-              <MyProfilePage dataUser={dataUser} idUser={idUser} />
+              <MyProfilePage
+                dataUser={dataUser}
+                idUser={idUser}
+                onRegenerateUser={regenerateDataUser}
+              />
             )}
           </Box>
         </Grid>

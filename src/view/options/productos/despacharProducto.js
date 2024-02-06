@@ -122,10 +122,10 @@ const DespacharProductosPage = ({ idUser }) => {
   };
   const optionsAlmacen = {
     download: false,
-    filter: false,
+    // filter: false,
     print: false,
     viewColumns: false,
-    search: false,
+    // search: false,
     selectableRows: "none",
     elevation: 5,
     textLabels: {
@@ -236,8 +236,8 @@ const DespacharProductosPage = ({ idUser }) => {
           <Grid item container xs={3} justifyContent={"flex-end"}>
             <ImageView
               imageData={dataImage}
-              height={"150px"}
-              width={"150px"}
+              height={"250px"}
+              width={"250px"}
               text=""
             />
           </Grid>

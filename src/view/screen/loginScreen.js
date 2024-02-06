@@ -54,7 +54,7 @@ function Login({ onChangeScreen, users, onInitUser }) {
         onError: (err) => {},
       });
     } else {
-      setFormErrors({ ...formErrors, User: "usuario Inexxistente" });
+      setFormErrors({ ...formErrors, User: "usuario Inexistente" });
     }
   }
   //controll dialog recuperar password
