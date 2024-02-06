@@ -242,12 +242,12 @@ const ModelosPage = () => {
               <FormControlLabel
                 value="crear"
                 control={<Radio />}
-                label="Nuevo Almacen"
+                label="Nuevo Modelo"
               />
               <FormControlLabel
                 value="editar"
                 control={<Radio />}
-                label="Editar Almacenes"
+                label="Editar Modelos"
               />
             </RadioGroup>
           </FormControl>
